@@ -10,8 +10,8 @@ class PatternTest is UnitTest
     let pattern = (P("x") + P("y")) / (P("z") + P.any())
     
     h.expect_eq[String](
-      ((P("x") + P("y")) / (P("z") + P.any())).string(),
-      "(('x' + 'y') / ('z' + any))"
+      ((P("x") + P("yz")) / (P.set("abc") + P.any())).string(),
+      "(('x' + 'yz') / ([abc] + any))"
     )
     
     h.expect_eq[String](

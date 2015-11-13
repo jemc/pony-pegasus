@@ -2,6 +2,7 @@
 primitive P
   fun tag any():            Pattern => PatternAny
   fun tag str(s: String):   Pattern => PatternString(s)
+  fun tag set(s: String):   Pattern => PatternCharacterSet(s)
   fun tag apply(s: String): Pattern => str(s)
 
 trait val Pattern
@@ -18,6 +19,11 @@ class val PatternString is Pattern
   let inner: String
   new iso create(s: String) => inner = s
   fun val string(): String => "'"+inner.string()+"'"
+
+class val PatternCharacterSet is Pattern
+  let inner: String
+  new iso create(s: String) => inner = s
+  fun val string(): String => "["+inner.string()+"]"
 
 class val PatternConcatenation is Pattern
   let first: Pattern
