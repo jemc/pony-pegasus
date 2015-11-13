@@ -1,7 +1,7 @@
 
 use "ponytest"
 use ".."
-use "../.."
+use "../interpreter"
 
 class InterpreterTest is UnitTest
   new iso create() => None
