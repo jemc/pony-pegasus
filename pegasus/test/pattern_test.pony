@@ -14,4 +14,16 @@ class PatternTest is UnitTest
       "(('x' + 'y') / ('z' + any))"
     )
     
+    h.expect_eq[String](
+      (P("x") + P("y") + P("z") + P("!")).string(),
+      "('x' + ('y' + ('z' + '!')))",
+      "Right-associative tree for concatenations."
+    )
+    
+    h.expect_eq[String](
+      (P("x") / P("y") / P("z") / P("!")).string(),
+      "('x' / ('y' / ('z' / '!')))",
+      "Right-associative tree for ordered choices."
+    )
+    
     true

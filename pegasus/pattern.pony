@@ -22,9 +22,17 @@ class val PatternConcatenation is Pattern
   let second: Pattern
   new iso create(a: Pattern, b: Pattern) => first = a; second = b
   fun val string(): String => "("+first.string()+" + "+second.string()+")"
+  
+  fun val add(that: Pattern): Pattern =>
+    """ Build a right-associative tree for stacked concatenations. """
+    PatternConcatenation(first, second + that)
 
 class val PatternOrderedChoice is Pattern
   let first: Pattern
   let second: Pattern
   new iso create(a: Pattern, b: Pattern) => first = a; second = b
   fun val string(): String => "("+first.string()+" / "+second.string()+")"
+  
+  fun val div(that: Pattern): Pattern =>
+    """ Build a right-associative tree for stacked choices. """
+    PatternOrderedChoice(first, second / that)
