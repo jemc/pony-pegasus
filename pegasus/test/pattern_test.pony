@@ -7,6 +7,6 @@ class PatternTest is UnitTest
   fun name(): String => "pegasus.Pattern"
   
   fun apply(h: TestHelper): TestResult =>
-    Pattern
+    (P("x") + P("y")) / P("z")
     
     true
