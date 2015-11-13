@@ -8,6 +8,8 @@ trait val Pattern
   fun val string(): String
   fun val add(that: Pattern): Pattern => PatternConcatenation(this, that)
   fun val div(that: Pattern): Pattern => PatternOrderedChoice(this, that)
+  fun val le(number: U8):     Pattern => PatternCountOrLess(this, number)
+  fun val ge(number: U8):     Pattern => PatternCountOrMore(this, number)
 
 class val PatternAny is Pattern
   fun val string(): String => "any"
@@ -36,3 +38,15 @@ class val PatternOrderedChoice is Pattern
   fun val div(that: Pattern): Pattern =>
     """ Build a right-associative tree for stacked choices. """
     PatternOrderedChoice(first, second / that)
+
+class val PatternCountOrLess is Pattern
+  let inner: Pattern
+  let count: U8
+  new iso create(p: Pattern, c: U8) => inner = p; count = c
+  fun val string(): String => "("+inner.string()+"<="+count.string()+")"
+
+class val PatternCountOrMore is Pattern
+  let inner: Pattern
+  let count: U8
+  new iso create(p: Pattern, c: U8) => inner = p; count = c
+  fun val string(): String => "("+inner.string()+">="+count.string()+")"

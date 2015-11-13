@@ -26,4 +26,10 @@ class PatternTest is UnitTest
       "Right-associative tree for ordered choices."
     )
     
+    h.expect_eq[String](
+      ((P("x")<=1) + (P("y")>=0)).string(),
+      "(('x'<=1) + ('y'>=0))",
+      "Count-or-less and count-or-more patterns."
+    )
+    
     true
