@@ -22,6 +22,11 @@ class ExecutorTest is UnitTest
       (false, "abc", 0, 0)
     ])
     
+    test_match(h, P("xyz") + P.fin(), [
+      (true, "xyz", 0, 3),
+      (false, "xyzx", 0, 3)
+    ])
+    
     test_match(h, P.set("xyz") >= 1, [
       (true, "xyz", 0, 3),
       (true, "zyx", 0, 3),

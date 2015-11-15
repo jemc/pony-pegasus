@@ -8,8 +8,8 @@ class PatternTest is UnitTest
   
   fun apply(h: TestHelper): TestResult =>
     h.expect_eq[String](
-      ((P("x") + P("yz")) / (P.set("abc") + P.any())).string(),
-      "(('x' + 'yz') / ([abc] + any))",
+      ((P("xyz") + P.set("abc")) / (P.any() + P.fin())).string(),
+      "(('xyz' + [abc]) / (any + fin))",
       "Basic patterns and relations."
     )
     

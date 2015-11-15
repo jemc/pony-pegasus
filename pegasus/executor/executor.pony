@@ -25,6 +25,7 @@ class Executor
   fun ref _execute(p': Pattern)? =>
     match p'
     | let p: PatternAny           => _execute_any(p)
+    | let p: PatternFinish        => _execute_finish(p); return
     | let p: PatternString        => _execute_string(p)
     | let p: PatternCharacterSet  => _execute_character_set(p)
     | let p: PatternConcatenation => _execute_concatenation(p)
@@ -44,6 +45,11 @@ class Executor
     if subject.size() > index then
       index = index + 1
     else
+      error
+    end
+  
+  fun ref _execute_finish(p: PatternFinish)? =>
+    if subject.size() > index then
       error
     end
   

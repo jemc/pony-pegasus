@@ -1,6 +1,7 @@
 
 primitive P
   fun tag any():            Pattern => PatternAny
+  fun tag fin():            Pattern => PatternFinish
   fun tag str(s: String):   Pattern => PatternString(s)
   fun tag set(s: String):   Pattern => PatternCharacterSet(s)
   fun tag apply(s: String): Pattern => str(s)
@@ -14,6 +15,9 @@ trait val Pattern
 
 primitive PatternAny is Pattern
   fun val string(): String => "any"
+
+primitive PatternFinish is Pattern
+  fun val string(): String => "fin"
 
 class val PatternString is Pattern
   let inner: String
