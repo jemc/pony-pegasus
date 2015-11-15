@@ -25,7 +25,7 @@ class Executor
   fun ref _execute(p': Pattern)? =>
     match p'
     | let p: PatternAny           => _execute_any()
-    | let p: PatternFinish        => _execute_finish(); return
+    | let p: PatternFinish        => _execute_finish()
     | let p: PatternString        => _execute_string(p)
     | let p: PatternCharacterSet  => _execute_character_set(p)
     | let p: PatternConcatenation => _execute_concatenation(p)
