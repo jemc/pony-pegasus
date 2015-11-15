@@ -1,14 +1,14 @@
 
 use ".."
 
-class Interpreter
+class Executor
   var index:       U64          = 0
   var start_index: U64          = 0
   var end_index:   (U64 | None) = 0
   var error_index: (U64 | None) = 0
   var subject:     String       = ""
   
-  fun ref apply(grammar: Pattern, subject': String): Interpreter =>
+  fun ref apply(grammar: Pattern, subject': String): Executor =>
     start_index = 0
     end_index   = None
     error_index = 0

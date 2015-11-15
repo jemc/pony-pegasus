@@ -7,4 +7,4 @@ actor Main is TestList
   
   fun tag tests(test: PonyTest) =>
     test(PatternTest)
-    test(InterpreterTest)
+    test(ExecutorTest)

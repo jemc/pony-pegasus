@@ -1,11 +1,11 @@
 
 use "ponytest"
 use ".."
-use "../interpreter"
+use "../executor"
 
-class InterpreterTest is UnitTest
+class ExecutorTest is UnitTest
   new iso create() => None
-  fun name(): String => "pegasus/interpreter.Interpreter"
+  fun name(): String => "pegasus/executor.Executor"
   
   fun apply(h: TestHelper): TestResult =>
     test_match(h, P.any(), [
@@ -56,7 +56,7 @@ class InterpreterTest is UnitTest
     true
   
   fun test_match(h: TestHelper, g: Pattern, a: Array[(Bool, String, U64, U64)]) =>
-    let parse = Interpreter
+    let parse = Executor
     for data in a.values() do
       (let success, let subject, let start, let final) = data
       let desc = g.string()+" ~ '"+subject+"' "
