@@ -12,7 +12,7 @@ trait val Pattern
   fun val le(number: U8):     Pattern => PatternCountOrLess(this, number)
   fun val ge(number: U8):     Pattern => PatternCountOrMore(this, number)
 
-class val PatternAny is Pattern
+primitive PatternAny is Pattern
   fun val string(): String => "any"
 
 class val PatternString is Pattern
