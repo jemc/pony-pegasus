@@ -31,4 +31,10 @@ class PatternTest is UnitTest
       "Count-or-less and count-or-more patterns."
     )
     
+    h.expect_eq[String](
+      (not P("x") + not not P("y") + not not not P("z") + P.any()).string(),
+      "(not 'x' + (pos 'y' + (not 'z' + any)))",
+      "Negative and positive preicates (lookahead)."
+    )
+    
     true

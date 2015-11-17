@@ -8,6 +8,7 @@ primitive P
 
 trait val Pattern
   fun val string(): String
+  fun val op_not():           Pattern => PatternNegativePredicate(this)
   fun val add(that: Pattern): Pattern => PatternConcatenation(this, that)
   fun val div(that: Pattern): Pattern => PatternOrderedChoice(this, that)
   fun val le(number: U8):     Pattern => PatternCountOrLess(this, number)
@@ -28,6 +29,20 @@ class val PatternCharacterSet is Pattern
   let inner: String
   new iso create(s: String) => inner = s
   fun val string(): String => "["+inner.string()+"]"
+
+class val PatternNegativePredicate is Pattern
+  let inner: Pattern
+  new iso create(p: Pattern) => inner = p
+  fun val string(): String => "not "+inner.string()
+  
+  fun val op_not(): Pattern => PatternPositivePredicate(inner)
+
+class val PatternPositivePredicate is Pattern
+  let inner: Pattern
+  new iso create(p: Pattern) => inner = p
+  fun val string(): String => "pos "+inner.string()
+  
+  fun val op_not(): Pattern => PatternNegativePredicate(inner)
 
 class val PatternConcatenation is Pattern
   let first: Pattern
