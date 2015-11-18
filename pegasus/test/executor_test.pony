@@ -58,6 +58,20 @@ class ExecutorTest is UnitTest
       (false, "xyzxyzxyz!", 0, 6)
     ])
     
+    test_match(h, ((not P("!") + P.any()) >= 1) + P.fin(), [
+      (false, "", 0, 0),
+      (true, "x", 0, 1),
+      (true, "xyz", 0, 3),
+      (false, "x!z", 0, 1)
+    ])
+    
+    test_match(h, ((not not P.set("xyz") + P.any()) >= 1) + P.fin(), [
+      (false, "", 0, 0),
+      (true, "x", 0, 1),
+      (true, "xyz", 0, 3),
+      (false, "x!z", 0, 1)
+    ])
+    
     true
   
   fun test_match(h: TestHelper, g: Pattern, a: Array[(Bool, String, U64, U64)]) =>

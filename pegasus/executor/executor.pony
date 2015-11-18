@@ -24,21 +24,25 @@ class Executor
   
   fun ref _execute(p': Pattern)? =>
     match p'
-    | let p: PatternAny           => _execute_any()
-    | let p: PatternFinish        => _execute_finish()
-    | let p: PatternString        => _execute_string(p)
-    | let p: PatternCharacterSet  => _execute_character_set(p)
-    | let p: PatternConcatenation => _execute_concatenation(p)
-    | let p: PatternOrderedChoice => _execute_ordered_choice(p)
-    | let p: PatternCountOrLess   => _execute_count_or_less(p)
-    | let p: PatternCountOrMore   => _execute_count_or_more(p)
+    | let p: PatternAny               => _execute_any()
+    | let p: PatternFinish            => _execute_finish()
+    | let p: PatternString            => _execute_string(p)
+    | let p: PatternCharacterSet      => _execute_character_set(p)
+    | let p: PatternNegativePredicate => _execute_negative_predicate(p)
+    | let p: PatternPositivePredicate => _execute_positive_predicate(p)
+    | let p: PatternConcatenation     => _execute_concatenation(p)
+    | let p: PatternOrderedChoice     => _execute_ordered_choice(p)
+    | let p: PatternCountOrLess       => _execute_count_or_less(p)
+    | let p: PatternCountOrMore       => _execute_count_or_more(p)
     end
   
   fun _save(): U64 =>
     index
   
-  fun ref _restore(saved: U64) =>
-    try if index > (error_index as U64) then error_index = index end end
+  fun ref _restore(saved: U64, lookahead: Bool = false) =>
+    try if not lookahead and (index > (error_index as U64)) then
+      error_index = index
+    end end
     index = saved
   
   fun ref _execute_any()? =>
@@ -64,6 +68,24 @@ class Executor
     try p.inner.find(subject.substring(index.i64(), index.i64()))
       index = index + 1
     else
+      error
+    end
+  
+  fun ref _execute_negative_predicate(p: PatternNegativePredicate)? =>
+    let saved = _save()
+    if try _execute(p.inner); true else false end then
+      _restore(saved, true)
+      error
+    else
+      _restore(saved, true)
+    end
+  
+  fun ref _execute_positive_predicate(p: PatternPositivePredicate)? =>
+    let saved = _save()
+    if try _execute(p.inner); true else false end then
+      _restore(saved, true)
+    else
+      _restore(saved, true)
       error
     end
   
