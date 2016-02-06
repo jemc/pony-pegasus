@@ -37,4 +37,10 @@ class PatternTest is UnitTest
       "Negative and positive preicates (lookahead)."
     )
     
+    h.expect_eq[String](
+      P("xyz")("NAME").string(),
+      "'xyz'(NAME)",
+      "Named captures."
+    )
+    
     true

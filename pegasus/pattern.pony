@@ -13,6 +13,7 @@ trait val Pattern
   fun val div(that: Pattern): Pattern => PatternOrderedChoice(this, that)
   fun val le(number: U8):     Pattern => PatternCountOrLess(this, number)
   fun val ge(number: U8):     Pattern => PatternCountOrMore(this, number)
+  fun val apply(n: String):   Pattern => PatternNamedCapture(this, n)
 
 primitive PatternAny is Pattern
   fun val string(): String => "any"
@@ -75,3 +76,9 @@ class val PatternCountOrMore is Pattern
   let count: U8
   new iso create(p: Pattern, c: U8) => inner = p; count = c
   fun val string(): String => "("+inner.string()+">="+count.string()+")"
+
+class val PatternNamedCapture is Pattern
+  let inner: Pattern
+  let name: String
+  new iso create(p: Pattern, n: String) => inner = p; name = n
+  fun val string(): String => inner.string()+"("+name+")"
