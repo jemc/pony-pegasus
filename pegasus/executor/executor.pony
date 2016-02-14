@@ -45,33 +45,35 @@ class Executor
     end end
     index = saved
   
-  fun ref _execute_any()? =>
+  fun ref _execute(_)? => error
+  
+  fun ref _execute(p: PatternAny)? =>
     if subject.size() > index then
       index = index + 1
     else
       error
     end
   
-  fun ref _execute_finish()? =>
+  fun ref _execute(p: PatternFinish)? =>
     if subject.size() > index then
       error
     end
   
-  fun ref _execute_string(p: PatternString)? =>
+  fun ref _execute(p: PatternString)? =>
     if subject.compare_sub(p.inner, p.inner.size(), index.i64()) is Equal then
       index = index + p.inner.size()
     else
       error
     end
   
-  fun ref _execute_character_set(p: PatternCharacterSet)? =>
+  fun ref _execute(p: PatternCharacterSet)? =>
     try p.inner.find(subject.substring(index.i64(), index.i64()))
       index = index + 1
     else
       error
     end
   
-  fun ref _execute_negative_predicate(p: PatternNegativePredicate)? =>
+  fun ref _execute(p: PatternNegativePredicate)? =>
     let saved = _save()
     if try _execute(p.inner); true else false end then
       _restore(saved, true)
@@ -80,7 +82,7 @@ class Executor
       _restore(saved, true)
     end
   
-  fun ref _execute_positive_predicate(p: PatternPositivePredicate)? =>
+  fun ref _execute(p: PatternPositivePredicate)? =>
     let saved = _save()
     if try _execute(p.inner); true else false end then
       _restore(saved, true)
@@ -89,7 +91,7 @@ class Executor
       error
     end
   
-  fun ref _execute_concatenation(p: PatternConcatenation)? =>
+  fun ref _execute(p: PatternConcatenation)? =>
     let saved = _save()
     try
       _execute(p.first)
@@ -99,7 +101,7 @@ class Executor
       error
     end
   
-  fun ref _execute_ordered_choice(p: PatternOrderedChoice)? =>
+  fun ref _execute(p: PatternOrderedChoice)? =>
     let saved = _save()
     try
       _execute(p.first)
@@ -112,7 +114,7 @@ class Executor
       end
     end
   
-  fun ref _execute_count_or_less(p: PatternCountOrLess) =>
+  fun ref _execute(p: PatternCountOrLess) =>
     try
       var i: U8 = 0
       while i < p.count do
@@ -124,7 +126,7 @@ class Executor
       i = i + 1 end
     end
   
-  fun ref _execute_count_or_more(p: PatternCountOrMore)? =>
+  fun ref _execute(p: PatternCountOrMore)? =>
     let saved = _save()
     try
       var i: U8 = 0
