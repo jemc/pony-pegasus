@@ -1,12 +1,22 @@
 
 use ".."
 
+class val ExecutorCrumb
+  var index: U64 = 0
+  var categ: String = ""
+  var name: String = ""
+  new val create(i: U64, c: String, n: String) =>
+    index = i; categ = c; name = n
+
+type ExecutorCrumbs is Stack[ExecutorCrumb] val
+
 class Executor
-  var index:       U64          = 0
-  var start_index: U64          = 0
-  var end_index:   (U64 | None) = 0
-  var error_index: (U64 | None) = 0
-  var subject:     String       = ""
+  var index:       U64            = 0
+  var start_index: U64            = 0
+  var end_index:   (U64 | None)   = 0
+  var error_index: (U64 | None)   = 0
+  var subject:     String         = ""
+  var crumbs:      ExecutorCrumbs = ExecutorCrumbs
   
   fun ref apply(grammar: Pattern, subject': String): Executor =>
     start_index = 0
@@ -22,28 +32,18 @@ class Executor
     
     this
   
-  fun ref _execute(p': Pattern)? =>
-    match p'
-    | let p: PatternAny               => _execute_any()
-    | let p: PatternFinish            => _execute_finish()
-    | let p: PatternString            => _execute_string(p)
-    | let p: PatternCharacterSet      => _execute_character_set(p)
-    | let p: PatternNegativePredicate => _execute_negative_predicate(p)
-    | let p: PatternPositivePredicate => _execute_positive_predicate(p)
-    | let p: PatternConcatenation     => _execute_concatenation(p)
-    | let p: PatternOrderedChoice     => _execute_ordered_choice(p)
-    | let p: PatternCountOrLess       => _execute_count_or_less(p)
-    | let p: PatternCountOrMore       => _execute_count_or_more(p)
-    end
+  fun _save(): (U64, ExecutorCrumbs) =>
+    (index, crumbs)
   
-  fun _save(): U64 =>
-    index
-  
-  fun ref _restore(saved: U64, lookahead: Bool = false) =>
+  fun ref _restore(saved: (U64, ExecutorCrumbs), lookahead: Bool = false) =>
     try if not lookahead and (index > (error_index as U64)) then
       error_index = index
     end end
-    index = saved
+    index  = saved._1
+    crumbs = saved._2
+  
+  fun ref _leave_crumb(s: String, n: String) =>
+    crumbs = crumbs + ExecutorCrumb(index, s, n)
   
   fun ref _execute(_)? => error
   
@@ -145,4 +145,14 @@ class Executor
           error
         end
       end
+    end
+
+  fun ref _execute(p: PatternNamedCapture)? =>
+    let saved = _save()
+    _leave_crumb("c_start", p.name)
+    try _execute(p.inner)
+      _leave_crumb("c_end", p.name)
+    else
+      _restore(saved)
+      error
     end
