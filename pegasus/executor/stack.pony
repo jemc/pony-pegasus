@@ -1,5 +1,5 @@
 primitive _StackBottom
-  fun size(): U64 => 0
+  fun size(): USize => 0
 
 class box Stack[A: Any val] is ReadSeq[A]
   """
@@ -16,9 +16,9 @@ class box Stack[A: Any val] is ReadSeq[A]
     _inner = consume inner
     _value = consume value
   
-  fun size(): U64 => 1 + _inner.size()
+  fun size(): USize => 1 + _inner.size()
   
-  fun apply(i: U64 = 0): A^ ? =>
+  fun apply(i: USize = 0): A^ ? =>
     match i
     | 0 => _value as A^
     else
@@ -59,7 +59,7 @@ class box Stack[A: Any val] is ReadSeq[A]
     consume a
   
   fun rarray(): Array[A] val^ =>
-    var i: U64 = size()
+    var i: USize = size()
     let a = recover trn Array[A](i) end
     for v in values() do i = i - 1
       try a.update(i, consume v) end

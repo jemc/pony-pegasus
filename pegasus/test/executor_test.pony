@@ -7,8 +7,8 @@ class ExecutorTest is UnitTest
   new iso create() => None
   fun name(): String => "pegasus/executor.Executor"
   
-  fun apply(h: TestHelper): TestResult =>
-    let no_crumbs = Array[(U64, String, String)]
+  fun apply(h: TestHelper) =>
+    let no_crumbs = Array[(USize, String, String)]
     
     test_match(h, P.any(), [
       (true, "x", 0, 1, no_crumbs),
@@ -84,7 +84,7 @@ class ExecutorTest is UnitTest
     true
   
   fun test_match(h: TestHelper, g: Pattern,
-    a: Array[(Bool, String, U64, U64, Array[(U64, String, String)])]
+    a: Array[(Bool, String, USize, USize, Array[(USize, String, String)])]
   ) =>
     let parse = Executor
     for data in a.values() do
@@ -93,22 +93,24 @@ class ExecutorTest is UnitTest
       
       parse(g, subject)
       
-      h.expect_eq[String](parse.subject, subject, desc+"subject")
-      h.expect_eq[U64](parse.start_index, start, desc+"start_index")
+      h.assert_eq[String](parse.subject, subject, desc+"subject")
+      h.assert_eq[USize](parse.start_index, start, desc+"start_index")
       
       try
         if success then
-          h.expect_true(parse.error_index is None, desc+"error_index")
-          h.expect_eq[U64](parse.end_index as U64, final, desc+"end_index")
+          h.assert_true(parse.error_index is None, desc+"error_index")
+          h.assert_eq[USize](parse.end_index as USize, final, desc+"end_index")
         else
-          h.expect_true(parse.end_index is None, desc+"end_index")
-          h.expect_eq[U64](parse.error_index as U64, final, desc+"error_index")
+          h.assert_true(parse.end_index is None, desc+"end_index")
+          h.assert_eq[USize](parse.error_index as USize, final, desc+"error_index")
         end
       else
-        h.expect_true(false, if success then
-          desc+"expected end_index to be a U64"
+        h.assert_true(false, if success then
+          desc+"expected no end_index, but error_index was "
+              +try (parse.error_index as USize).string() else "?" end
         else
-          desc+"expected error_index to be a U64"
+          desc+"expected no error_index, but end_index was "
+              +try (parse.end_index as USize).string() else "?" end
         end)
       end
       
@@ -116,9 +118,9 @@ class ExecutorTest is UnitTest
         for expected_crumb in crumbs.values() do
           None
           for actual_crumb in parse.crumbs.rarray().values() do
-            h.expect_eq[U64](actual_crumb.index, expected_crumb._1)
-            h.expect_eq[String](actual_crumb.categ, expected_crumb._2)
-            h.expect_eq[String](actual_crumb.name, expected_crumb._3)
+            h.assert_eq[USize](actual_crumb.index, expected_crumb._1)
+            h.assert_eq[String](actual_crumb.categ, expected_crumb._2)
+            h.assert_eq[String](actual_crumb.name, expected_crumb._3)
           end
         end
       end

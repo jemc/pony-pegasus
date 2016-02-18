@@ -2,19 +2,19 @@
 use ".."
 
 class val ExecutorCrumb
-  var index: U64 = 0
+  var index: USize = 0
   var categ: String = ""
   var name: String = ""
-  new val create(i: U64, c: String, n: String) =>
+  new val create(i: USize, c: String, n: String) =>
     index = i; categ = c; name = n
 
 type ExecutorCrumbs is Stack[ExecutorCrumb] val
 
 class Executor
-  var index:       U64            = 0
-  var start_index: U64            = 0
-  var end_index:   (U64 | None)   = 0
-  var error_index: (U64 | None)   = 0
+  var index:       USize          = 0
+  var start_index: USize          = 0
+  var end_index:   (USize | None) = 0
+  var error_index: (USize | None) = 0
   var subject:     String         = ""
   var crumbs:      ExecutorCrumbs = ExecutorCrumbs
   
@@ -32,11 +32,11 @@ class Executor
     
     this
   
-  fun _save(): (U64, ExecutorCrumbs) =>
+  fun _save(): (USize, ExecutorCrumbs) =>
     (index, crumbs)
   
-  fun ref _restore(saved: (U64, ExecutorCrumbs), lookahead: Bool = false) =>
-    try if not lookahead and (index > (error_index as U64)) then
+  fun ref _restore(saved: (USize, ExecutorCrumbs), lookahead: Bool = false) =>
+    try if not lookahead and (index > (error_index as USize)) then
       error_index = index
     end end
     index  = saved._1
@@ -60,14 +60,14 @@ class Executor
     end
   
   fun ref _execute(p: PatternString)? =>
-    if subject.compare_sub(p.inner, p.inner.size(), index.i64()) is Equal then
+    if subject.compare_sub(p.inner, p.inner.size(), index.isize()) is Equal then
       index = index + p.inner.size()
     else
       error
     end
   
   fun ref _execute(p: PatternCharacterSet)? =>
-    try p.inner.find(subject.substring(index.i64(), index.i64()))
+    try p.inner.find(subject.substring(index.isize(), index.isize() + 1))
       index = index + 1
     else
       error
