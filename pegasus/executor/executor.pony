@@ -45,8 +45,6 @@ class Executor
   fun ref _leave_crumb(s: String, n: String) =>
     crumbs = crumbs + ExecutorCrumb(index, s, n)
   
-  fun ref _execute(_)? => error
-  
   fun ref _execute(p: PatternAny)? =>
     if subject.size() > index then
       index = index + 1
@@ -146,7 +144,7 @@ class Executor
         end
       end
     end
-
+  
   fun ref _execute(p: PatternNamedCapture)? =>
     let saved = _save()
     _leave_crumb("c_start", p.name)
@@ -156,3 +154,5 @@ class Executor
       _restore(saved)
       error
     end
+    
+  fun ref _execute(p: Pattern)? => error
