@@ -1,7 +1,7 @@
 primitive _StackBottom
   fun size(): USize => 0
 
-class box Stack[A: Any val] is ReadSeq[A]
+class val Stack[A: Any val]
   """
   A FILO stack implemented as a read-only persistent singly linked list.
   """
@@ -12,7 +12,7 @@ class box Stack[A: Any val] is ReadSeq[A]
     _inner = _StackBottom
     _value = _StackBottom
   
-  new box _create_on(inner: Stack[A], value: A) =>
+  new val _create_on(inner: Stack[A] val, value: A) =>
     _inner = consume inner
     _value = consume value
   
@@ -28,29 +28,29 @@ class box Stack[A: Any val] is ReadSeq[A]
   fun is_empty(): Bool =>
     _inner isnt _StackBottom
   
-  fun add(value: A): this->Stack[A]^ =>
+  fun val add(value: A): Stack[A] val =>
     _create_on(this, consume value)
   
   fun top(): A^? =>
     _value as A^
   
-  fun without_top(): this->Stack[A]^? =>
+  fun val without_top(): this->Stack[A]^? =>
     _inner as this->Stack[A]
   
-  fun values(): Iterator[A^]^ =>
+  fun val values(): Iterator[A^]^ =>
     """
     Return an iterator on the values in the stack, starting from the top.
     """
     _StackValues[A](this)
   
-  fun reversed(): Stack[A]^ =>
-    var r = recover box Stack[A] end
+  fun val reversed(): Stack[A]^ =>
+    var r = recover val Stack[A] end
     for v in values() do
       r = r + consume v
     end
     consume r
   
-  fun array(): Array[A] val^ =>
+  fun val array(): Array[A] val^ =>
     let s = size()
     let a = recover trn Array[A](s) end
     for v in values() do
@@ -58,7 +58,7 @@ class box Stack[A: Any val] is ReadSeq[A]
     end
     consume a
   
-  fun rarray(): Array[A] val^ =>
+  fun val rarray(): Array[A] val^ =>
     var i: USize = size()
     let a = recover trn Array[A](i) end
     for v in values() do i = i - 1
