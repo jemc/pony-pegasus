@@ -1,5 +1,6 @@
 
 primitive P
+  fun tag noop():           Pattern => PatternNoOp
   fun tag any():            Pattern => PatternAny
   fun tag fin():            Pattern => PatternFinish
   fun tag str(s: String):   Pattern => PatternString(s)
@@ -14,6 +15,9 @@ trait val Pattern
   fun val le(number: U8):     Pattern => PatternCountOrLess(this, number)
   fun val ge(number: U8):     Pattern => PatternCountOrMore(this, number)
   fun val apply(n: String):   Pattern => PatternNamedCapture(this, n)
+
+primitive PatternNoOp is Pattern
+  fun val string(): String => "noop"
 
 primitive PatternAny is Pattern
   fun val string(): String => "any"
