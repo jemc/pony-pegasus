@@ -17,6 +17,13 @@ class ExecutorTest is UnitTest
       (false, "", 0, 0, no_crumbs)
     ])
     
+    test_match(h, P.noop() + P.any(), [
+      (true, "x", 0, 1, no_crumbs),
+      (true, "y", 0, 1, no_crumbs),
+      (true, "xy", 0, 1, no_crumbs),
+      (false, "", 0, 0, no_crumbs)
+    ])
+    
     test_match(h, P("xyz"), [
       (true, "xyz", 0, 3, no_crumbs),
       (true, "xyzxyz", 0, 3, no_crumbs),
