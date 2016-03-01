@@ -1,6 +1,7 @@
 
 primitive P
   fun tag noop():           Pattern => PatternNoOp
+  fun tag fail():           Pattern => PatternFail
   fun tag any():            Pattern => PatternAny
   fun tag fin():            Pattern => PatternFinish
   fun tag str(s: String):   Pattern => PatternString(s)
@@ -18,6 +19,9 @@ trait val Pattern
 
 primitive PatternNoOp is Pattern
   fun val string(): String => "noop"
+
+primitive PatternFail is Pattern
+  fun val string(): String => "fail"
 
 primitive PatternAny is Pattern
   fun val string(): String => "any"

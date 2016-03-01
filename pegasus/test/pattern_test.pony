@@ -8,9 +8,15 @@ class PatternTest is UnitTest
   
   fun apply(h: TestHelper) =>
     h.assert_eq[String](
-      ((P("xyz") + P.set("abc")) / (P.noop() + P.any() + P.fin())).string(),
-      "(('xyz' + [abc]) / (noop + (any + fin)))",
+      ((P("xyz") + P.set("abc")) / (P.any() + P.fin())).string(),
+      "(('xyz' + [abc]) / (any + fin))",
       "Basic patterns and relations."
+    )
+    
+    h.assert_eq[String](
+      (P.noop() + P.fail()).string(),
+      "(noop + fail)",
+      "Uncommon basic patterns."
     )
     
     h.assert_eq[String](
