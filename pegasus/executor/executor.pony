@@ -45,8 +45,8 @@ class Executor
   fun ref _leave_crumb(s: String, n: String) =>
     crumbs = crumbs + ExecutorCrumb(index, s, n)
   
-  fun ref _execute(p: PatternNoOp)? =>
-    None
+  fun ref _execute(p: PatternNoOp)? => None
+  fun ref _execute(p: PatternFail)? => error
   
   fun ref _execute(p: PatternAny)? =>
     if subject.size() > index then
