@@ -20,6 +20,18 @@ class PatternTest is UnitTest
     )
     
     h.assert_eq[String](
+      (P.any() + P.fail() + P.any()).string(),
+      "(any + fail)",
+      "Fail skips the rest of a concatenation."
+    )
+    
+    h.assert_eq[String](
+      (P.fail() / P.any()).string(),
+      "any",
+      "Fail disappears in an ordered choice."
+    )
+    
+    h.assert_eq[String](
       (P("x") + P("y") + P("z") + P("!")).string(),
       "('x' + ('y' + ('z' + '!')))",
       "Right-associative tree for concatenations."

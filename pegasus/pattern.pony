@@ -22,6 +22,9 @@ primitive PatternNoOp is Pattern
 
 primitive PatternFail is Pattern
   fun val string(): String => "fail"
+  
+  fun val add(that: Pattern): Pattern => this
+  fun val div(that: Pattern): Pattern => that
 
 primitive PatternAny is Pattern
   fun val string(): String => "any"
