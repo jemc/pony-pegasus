@@ -52,7 +52,7 @@ class PatternTest is UnitTest
     h.assert_eq[String](
       (not P("x") + not not P("y") + not not not P("z") + P.any()).string(),
       "(not 'x' + (pos 'y' + (not 'z' + any)))",
-      "Negative and positive preicates (lookahead)."
+      "Negative and positive predicates (lookahead)."
     )
     
     h.assert_eq[String](
