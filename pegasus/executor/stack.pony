@@ -34,8 +34,8 @@ class val Stack[A: Any val]
   fun top(): A^? =>
     _value as A^
   
-  fun val without_top(): this->Stack[A]^? =>
-    _inner as this->Stack[A]
+  fun val without_top(): Stack[A] val? =>
+    _inner as Stack[A]
   
   fun val values(): Iterator[A^]^ =>
     """
