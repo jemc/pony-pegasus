@@ -11,86 +11,86 @@ class ExecutorTest is UnitTest
     let no_crumbs = Array[(USize, String, String)]
     
     test_match(h, P.any(), [
-      (true, "x", 0, 1, no_crumbs),
-      (true, "y", 0, 1, no_crumbs),
-      (true, "xy", 0, 1, no_crumbs),
+      (true, "x", 0, 1, no_crumbs)
+      (true, "y", 0, 1, no_crumbs)
+      (true, "xy", 0, 1, no_crumbs)
       (false, "", 0, 0, no_crumbs)
     ])
     
     test_match(h, P.noop() + P.any(), [
-      (true, "x", 0, 1, no_crumbs),
-      (true, "y", 0, 1, no_crumbs),
-      (true, "xy", 0, 1, no_crumbs),
+      (true, "x", 0, 1, no_crumbs)
+      (true, "y", 0, 1, no_crumbs)
+      (true, "xy", 0, 1, no_crumbs)
       (false, "", 0, 0, no_crumbs)
     ])
     
     test_match(h, P.fail() + P.any(), [
-      (false, "x", 0, 0, no_crumbs),
-      (false, "y", 0, 0, no_crumbs),
-      (false, "xy", 0, 0, no_crumbs),
+      (false, "x", 0, 0, no_crumbs)
+      (false, "y", 0, 0, no_crumbs)
+      (false, "xy", 0, 0, no_crumbs)
       (false, "", 0, 0, no_crumbs)
     ])
     
     test_match(h, P("xyz"), [
-      (true, "xyz", 0, 3, no_crumbs),
-      (true, "xyzxyz", 0, 3, no_crumbs),
-      (false, "zyx", 0, 0, no_crumbs),
+      (true, "xyz", 0, 3, no_crumbs)
+      (true, "xyzxyz", 0, 3, no_crumbs)
+      (false, "zyx", 0, 0, no_crumbs)
       (false, "abc", 0, 0, no_crumbs)
     ])
     
     test_match(h, P("xyz") + P.fin(), [
-      (true, "xyz", 0, 3, no_crumbs),
+      (true, "xyz", 0, 3, no_crumbs)
       (false, "xyzx", 0, 3, no_crumbs)
     ])
     
     test_match(h, P.set("xyz") >= 1, [
-      (true, "xyz", 0, 3, no_crumbs),
-      (true, "zyx", 0, 3, no_crumbs),
-      (false, "abc", 0, 0, no_crumbs),
-      (true, "xxxzzy", 0, 6, no_crumbs),
-      (true, "xxxazy", 0, 3, no_crumbs),
+      (true, "xyz", 0, 3, no_crumbs)
+      (true, "zyx", 0, 3, no_crumbs)
+      (false, "abc", 0, 0, no_crumbs)
+      (true, "xxxzzy", 0, 6, no_crumbs)
+      (true, "xxxazy", 0, 3, no_crumbs)
       (false, "axxx", 0, 0, no_crumbs)
     ])
     
     test_match(h, (P("xyz") / P("abc")) >= 2, [
-      (false, "", 0, 0, no_crumbs),
-      (false, "abc", 0, 3, no_crumbs),
-      (false, "abcd", 0, 3, no_crumbs),
-      (true, "abcxyz", 0, 6, no_crumbs),
-      (true, "abcxyz?!", 0, 6, no_crumbs),
-      (true, "xyzabcxyz", 0, 9, no_crumbs),
+      (false, "", 0, 0, no_crumbs)
+      (false, "abc", 0, 3, no_crumbs)
+      (false, "abcd", 0, 3, no_crumbs)
+      (true, "abcxyz", 0, 6, no_crumbs)
+      (true, "abcxyz?!", 0, 6, no_crumbs)
+      (true, "xyzabcxyz", 0, 9, no_crumbs)
       (true, "xyzabcxyz?!", 0, 9, no_crumbs)
     ])
     
     test_match(h, ((P("x") + P("y") + P("z")) <= 2) + P("!"), [
-      (false, "", 0, 0, no_crumbs),
-      (true, "!", 0, 1, no_crumbs),
-      (false, "xy!", 0, 2, no_crumbs),
-      (true, "xyz!", 0, 4, no_crumbs),
-      (false, "xyz", 0, 3, no_crumbs),
-      (false, "zyx!", 0, 0, no_crumbs),
-      (false, "xyzx", 0, 4, no_crumbs),
-      (true, "xyzxyz!", 0, 7, no_crumbs),
+      (false, "", 0, 0, no_crumbs)
+      (true, "!", 0, 1, no_crumbs)
+      (false, "xy!", 0, 2, no_crumbs)
+      (true, "xyz!", 0, 4, no_crumbs)
+      (false, "xyz", 0, 3, no_crumbs)
+      (false, "zyx!", 0, 0, no_crumbs)
+      (false, "xyzx", 0, 4, no_crumbs)
+      (true, "xyzxyz!", 0, 7, no_crumbs)
       (false, "xyzxyzxyz!", 0, 6, no_crumbs)
     ])
     
     test_match(h, ((not P("!") + P.any()) >= 1) + P.fin(), [
-      (false, "", 0, 0, no_crumbs),
-      (true, "x", 0, 1, no_crumbs),
-      (true, "xyz", 0, 3, no_crumbs),
+      (false, "", 0, 0, no_crumbs)
+      (true, "x", 0, 1, no_crumbs)
+      (true, "xyz", 0, 3, no_crumbs)
       (false, "x!z", 0, 1, no_crumbs)
     ])
     
     test_match(h, ((not not P.set("xyz") + P.any()) >= 1) + P.fin(), [
-      (false, "", 0, 0, no_crumbs),
-      (true, "x", 0, 1, no_crumbs),
-      (true, "xyz", 0, 3, no_crumbs),
+      (false, "", 0, 0, no_crumbs)
+      (true, "x", 0, 1, no_crumbs)
+      (true, "xyz", 0, 3, no_crumbs)
       (false, "x!z", 0, 1, no_crumbs)
     ])
     
     test_match(h, (P.any() + P("xyz")("NAME") + P.any()), [
       (true, "~xyz~", 0, 5, [
-        (1, "c_start", "NAME"),
+        (1, "c_start", "NAME")
         (4, "c_end",   "NAME")
       ])
     ])
