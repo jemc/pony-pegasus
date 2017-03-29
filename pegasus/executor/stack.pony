@@ -1,5 +1,5 @@
 primitive _StackBottom
-  fun size(): USize => 0
+  fun size(): USize => -1
 
 class val Stack[A: Any val]
   """
@@ -26,7 +26,7 @@ class val Stack[A: Any val]
     end
   
   fun is_empty(): Bool =>
-    _inner isnt _StackBottom
+    _inner is _StackBottom
   
   fun val add(value: A): Stack[A] val =>
     _create_on(this, consume value)
@@ -59,10 +59,10 @@ class val Stack[A: Any val]
     consume a
   
   fun val rarray(): Array[A] val^ =>
-    var i: USize = size()
-    let a = recover trn Array[A](i) end
-    for v in values() do i = i - 1
-      try a.update(i, consume v) end
+    let s = size()
+    let a = recover trn Array[A](s) end
+    for v in values() do
+      a.unshift(consume v)
     end
     consume a
 
