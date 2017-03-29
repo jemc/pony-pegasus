@@ -35,12 +35,12 @@ primitive PatternFinish is Pattern
 class val PatternString is Pattern
   let inner: String
   new iso create(s: String) => inner = s
-  fun val string(): String => "'"+inner.string()+"'"
+  fun val string(): String => "\""+_Util.string_escape(inner.string())+"\""
 
 class val PatternCharacterSet is Pattern
   let inner: String
   new iso create(s: String) => inner = s
-  fun val string(): String => "["+inner.string()+"]"
+  fun val string(): String => "["+_Util.string_escape(inner.string())+"]"
 
 class val PatternNegativePredicate is Pattern
   let inner: Pattern
