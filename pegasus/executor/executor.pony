@@ -25,7 +25,7 @@ class Executor
     index       = start_index
     subject     = subject'
     
-    try _execute(grammar)
+    try _execute(grammar)?
       error_index = None
       end_index = index
     end
@@ -68,7 +68,7 @@ class Executor
     end
   
   fun ref _execute(p: PatternCharacterSet)? =>
-    try p.inner.find(subject.substring(index.isize(), index.isize() + 1))
+    try p.inner.find(subject.substring(index.isize(), index.isize() + 1))?
       index = index + 1
     else
       error
@@ -76,7 +76,7 @@ class Executor
   
   fun ref _execute(p: PatternNegativePredicate)? =>
     let saved = _save()
-    if try _execute(p.inner); true else false end then
+    if try _execute(p.inner)?; true else false end then
       _restore(saved, true)
       error
     else
@@ -85,7 +85,7 @@ class Executor
   
   fun ref _execute(p: PatternPositivePredicate)? =>
     let saved = _save()
-    if try _execute(p.inner); true else false end then
+    if try _execute(p.inner)?; true else false end then
       _restore(saved, true)
     else
       _restore(saved, true)
@@ -95,8 +95,8 @@ class Executor
   fun ref _execute(p: PatternConcatenation)? =>
     let saved = _save()
     try
-      _execute(p.first)
-      _execute(p.second)
+      _execute(p.first)?
+      _execute(p.second)?
     else
       _restore(saved)
       error
@@ -105,10 +105,10 @@ class Executor
   fun ref _execute(p: PatternOrderedChoice)? =>
     let saved = _save()
     try
-      _execute(p.first)
+      _execute(p.first)?
     else
       try
-        _execute(p.second)
+        _execute(p.second)?
       else
         _restore(saved)
         error
@@ -120,7 +120,7 @@ class Executor
       var i: U8 = 0
       while i < p.count do
         let saved = _save()
-        try _execute(p.inner) else
+        try _execute(p.inner)? else
           _restore(saved)
           error
         end
@@ -132,7 +132,7 @@ class Executor
     try
       var i: U8 = 0
       while i < p.count do
-        _execute(p.inner)
+        _execute(p.inner)?
       i = i + 1 end
     else
       _restore(saved)
@@ -141,7 +141,7 @@ class Executor
     try
       while true do
         let saved' = _save()
-        try _execute(p.inner) else
+        try _execute(p.inner)? else
           _restore(saved')
           error
         end
@@ -151,7 +151,7 @@ class Executor
   fun ref _execute(p: PatternNamedCapture)? =>
     let saved = _save()
     _leave_crumb("c_start", p.name)
-    try _execute(p.inner)
+    try _execute(p.inner)?
       _leave_crumb("c_end", p.name)
     else
       _restore(saved)

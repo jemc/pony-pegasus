@@ -22,7 +22,7 @@ class val Stack[A: Any val]
     match i
     | 0 => _value as A^
     else
-      (_inner as this->Stack[A])(i - 1)
+      (_inner as this->Stack[A])(i - 1)?
     end
   
   fun is_empty(): Bool =>
@@ -88,4 +88,4 @@ class _StackValues[A: Any val] is Iterator[A^]
     """
     Get the value at the top of the stack, then move to the inner stack.
     """
-    (_stack = _stack.without_top()).top()
+    (_stack = _stack.without_top()?).top()?

@@ -7,7 +7,7 @@ primitive _Util
     let iter = s.values()
     try
       while iter.has_next() do
-        let byte = iter.next()
+        let byte = iter.next()?
         if byte == '"' then
           output.append("\\\"")
         elseif byte < 0x10 then
